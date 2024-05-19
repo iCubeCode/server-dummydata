@@ -9,7 +9,7 @@ app.use(express.json())
 
 
 app.get('/', (req, res) => {
-    res.send("Hello")
+    res.send("<div style='text-align:center'><h1>iCube Code</h1></div>")
 })
 
 app.get('/users', (req, res) => {
