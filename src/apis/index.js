@@ -3,18 +3,15 @@ const mongoose = require('mongoose')
 const router = express.Router()
 const Notes = require('../schema/notes')
 
-const LOGIN_KEY = 'XUI-IUX-007-XUI-IUX'
-const API_KEY = '8d1dae4f3eb48dc7af92cf6afa2831f824374ee8f889d40466a4c67327a3489f'
-
 router.post('/login', async (req, res) => {
 
     const { key } = req.body
 
     try {
 
-        if (key === LOGIN_KEY) {
+        if (key === process.env.LOGIN_KEY) {
             res.status(200).json({
-                api_key: API_KEY,
+                api_key: process.env.API_KEY,
                 status: true,
                 message: "Successfully Logged in",
                 session: 24 * 60
@@ -141,7 +138,7 @@ router.post('/delete_note', check_api_key, async (req, res) => {
 
 function check_api_key(req, res, next) {
 
-    if (req.headers['api_key'] === API_KEY) {
+    if (req.headers['api_key'] === process.env.API_KEY) {
         next()
     }
     else {
