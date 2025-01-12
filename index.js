@@ -136,10 +136,6 @@ app.get('/', (req, res) => {
         `)
 })
 
-app.get('/end', (req, res) => {
-    res.send(process.env)
-})
-
 app.get('/users', (req, res) => {
 
     let values = users.filter((item) => {
