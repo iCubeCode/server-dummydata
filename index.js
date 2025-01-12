@@ -1,14 +1,18 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
+require('./src/db/index')
+const Notes = require('./src/schema/notes')
 
 const { users } = require('./Users')
 const { Products } = require('./Products')
 const { MyntraData } = require('./myntra-products')
+const AppRouter = require('./src/apis/index')
 
 app.use(cors())
 app.use(express.json())
 app.use('/icubecode', express.static('images'))
+app.use('/api', AppRouter)
 
 app.get('/', (req, res) => {
     res.send(`
