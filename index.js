@@ -3,6 +3,7 @@ const cors = require('cors')
 const app = express()
 require('./src/db/index')
 const Notes = require('./src/schema/notes')
+require('dotenv').config()
 
 const { users } = require('./Users')
 const { Products } = require('./Products')
@@ -13,6 +14,7 @@ app.use(cors())
 app.use(express.json())
 app.use('/icubecode', express.static('images'))
 app.use('/api', AppRouter)
+
 
 app.get('/', (req, res) => {
     res.send(`
@@ -132,6 +134,10 @@ app.get('/', (req, res) => {
 
 </html>
         `)
+})
+
+app.get('/end', (req, res) => {
+    res.send(process.env)
 })
 
 app.get('/users', (req, res) => {
