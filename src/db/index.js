@@ -1,15 +1,21 @@
 const mongoose = require('mongoose')
 
-mongoose.connect("mongodb+srv://necel64401:HYXcvcGSIt3Fr4ac@foggy.1hks0.mongodb.net/Notes?retryWrites=true&w=majority", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+try {
+
+    mongoose.connect("mongodb+srv://necel64401:HYXcvcGSIt3Fr4ac@foggy.1hks0.mongodb.net/Notes?retryWrites=true&w=majority", {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
 
 
-mongoose.connection.on('connected', () => {
-    console.log('database is connected...!!!')
-})
+    mongoose.connection.on('connected', () => {
+        console.log('database is connected...!!!')
+    })
 
+}
+catch (err) {
+    console.log(err)
+}
 
 // email: necel64401@pariag.com
 //password: MongoDB@#@007
