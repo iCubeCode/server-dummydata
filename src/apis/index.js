@@ -6,11 +6,10 @@ const Notes = require('../schema/notes')
 router.post('/login', async (req, res) => {
 
     const { key } = req.body
-
     try {
 
         if (key === process.env.LOGIN_KEY) {
-            res.status(200).json({
+            return res.status(200).json({
                 api_key: process.env.API_KEY,
                 status: true,
                 message: "Successfully Logged in",
@@ -18,13 +17,13 @@ router.post('/login', async (req, res) => {
             })
         }
 
-        res.status(204).json({
+        return res.status(204).json({
             message: "No Content",
             status: false
         })
     }
     catch (err) {
-        console.log(err)
+        console.error(err)
         return res.status(400).json({ message: "An Error Occured", status: false })
     }
 
@@ -41,7 +40,7 @@ router.post('/create_note', check_api_key, async (req, res) => {
 
     }
     catch (err) {
-        console.log(err)
+        console.error(err)
         return res.status(400).json({ message: "An Error Occured", status: false })
     }
 
@@ -51,7 +50,6 @@ router.post('/create_note', check_api_key, async (req, res) => {
 router.get('/all_notes', check_api_key, async (req, res) => {
 
     try {
-
         const notes = await Notes.find().select('_id name')
         return res.status(200).json({
             data: notes,
@@ -60,7 +58,7 @@ router.get('/all_notes', check_api_key, async (req, res) => {
 
     }
     catch (err) {
-        console.log(err)
+        console.error(err)
         return res.status(400).json({ message: "An Error Occured", status: false })
     }
     // returns the _id and name
@@ -75,18 +73,18 @@ router.post('/get_note_by_id', check_api_key, async (req, res) => {
         const note = await Notes.findById(objectId)
 
         if (note) {
-            res.status(200).json({
+            return res.status(200).json({
                 data: note,
                 status: true
             })
         }
         else {
-            res.status(204).json({ message: "Note is not found", status: false })
+            return res.status(204).json({ message: "Note is not found", status: false })
         }
 
     }
     catch (err) {
-        console.log(err)
+        console.error(err)
         return res.status(400).json({ message: "An Error Occured", status: false })
     }
 
@@ -106,14 +104,14 @@ router.post('/update_note', check_api_key, async (req, res) => {
         const updateNote = await Notes.findByIdAndUpdate(objectId, { $set: { note } }, { new: true })
 
         if (!updateNote) {
-            res.status(400).json({ message: "Something went wrong", status: false })
+            return res.status(400).json({ message: "Something went wrong", status: false })
         }
 
-        res.status(200).json({ message: "Updated Note Successfully", status: true })
+        return res.status(200).json({ message: "Updated Note Successfully", status: true })
 
     }
     catch (err) {
-        console.log(err)
+        console.error(err)
         return res.status(400).json({ message: "An Error Occured", status: false })
     }
 
@@ -132,14 +130,14 @@ router.post('/update_note_title', check_api_key, async (req, res) => {
         const updateNote = await Notes.findByIdAndUpdate(objectId, { $set: { name } }, { new: true })
 
         if (!updateNote) {
-            res.status(400).json({ message: "Something went wrong", status: false })
+            return res.status(400).json({ message: "Something went wrong", status: false })
         }
 
-        res.status(200).json({ message: "Updated Title Successfully", status: true })
+        return res.status(200).json({ message: "Updated Title Successfully", status: true })
 
     }
     catch (err) {
-        console.log(err)
+        console.error(err)
         return res.status(400).json({ message: "An Error Occured", status: false })
     }
 
@@ -150,10 +148,10 @@ router.post('/delete_note', check_api_key, async (req, res) => {
     try {
         const objectId = new mongoose.Types.ObjectId(req.body.id);
         const notes = await Notes.findByIdAndDelete(objectId)
-        res.status(200).json({ message: "Note Deleted successfully", status: true })
+        return res.status(200).json({ message: "Note Deleted successfully", status: true })
     }
     catch (err) {
-        console.log(err)
+        console.error(err)
         return res.status(400).json({ message: "An Error Occured", status: false })
     }
 
@@ -162,20 +160,21 @@ router.post('/delete_note', check_api_key, async (req, res) => {
 
 function check_api_key(req, res, next) {
     try {
+        let apiKey = req.headers['api_key']
 
-        if (req.headers['api_key'] === process.env.API_KEY) {
-            next()
+        if (apiKey === process.env.API_KEY) {
+            return next()
         }
         else {
-            res.status(403).json({
+            return res.status(403).json({
                 message: "Forbidden",
                 status: false
             })
         }
     }
     catch (err) {
-        console.log('err', err)
-        res.status(503).json({
+        console.error('err', err)
+        return res.status(503).json({
             message: "error",
             status: false
         })
